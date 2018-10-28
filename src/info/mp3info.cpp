@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include "mp3info.hpp"
-#include "ArgParseStandalone.h"
+#include "../ArgParseStandalone.h"
 
 int main(int argc,char *argv[]) {
 	ArgParse::ArgParser parser("MP3 file verification and analysis");
@@ -16,7 +16,7 @@ int main(int argc,char *argv[]) {
 	std::string infile = "";
 
 	parser.AddArgument("-v/--verbose","Produce verbose output",&verbose,ArgParse::Argument::Optional);
-	parser.AddArgument("-i/--infile","File to analyse",&infile,ArgParse::Argument::Optional);
+	parser.AddArgument("-i/--infile","File to analyse",&infile,ArgParse::Argument::Required);
 
 	if(parser.ParseArgs(argc,argv)<0) {
 		std::cerr << "Cannot parse arguments correctly" << std::endl;

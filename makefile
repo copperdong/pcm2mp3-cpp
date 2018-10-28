@@ -1,9 +1,24 @@
-all:
-	$(MAKE) src/transcode
-	$(MAKE) src/info
 
-clean:
 
-	$(MAKE) src/transcode
-	$(MAKE) src/info
+RM := rm -fr
 
+TARGETS := src/transcode src/info src 
+
+.PHONY: all $(TARGETS)
+all: MAKEFLAGS = all
+all: $(TARGETS)
+
+.PHONY: clean $(TARGETS)
+clean: MAKEFLAGS = clean
+clean: $(TARGETS)
+
+
+
+
+
+
+$(TARGETS):
+	$(MAKE) -C $@ $(MAKEFLAGS)
+	
+
+	

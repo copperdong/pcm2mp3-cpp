@@ -86,12 +86,13 @@ private:
 	mdata_t data;
 	offset_t start;
 
-
+	void build();
 
 public:
 	MP3Frame(const mdata_t &data_=mdata_t(),const offset_t start_=0) :
 		mpeg(MPEGVersion::Unknown), layer(MPEGLayer::Unknown), mode(MPEGMode::Unknown),
 		mp3(), offset(0), bitRate(0), sampleRate(0), crc(false), zero(false), data(data_), start(start_) {};
+	MP3Frame(const MP3Header &);
 	MP3Frame(const MP3Frame &)=default;
 	MP3Frame & operator=(const MP3Frame &)=default;
 	virtual ~MP3Frame() = default;

@@ -109,7 +109,7 @@ std::ostream & operator<<(std::ostream &o,const mp3::MP3Header &header) {
 
 std::ostream & operator<<(std::ostream &o,const mp3::MPEGLayer header) {
 	int v=4-static_cast<unsigned>(header);
-	if(v<0 || v>3) o << "Unknown";
+	if(v<0 || v>3) o << "Unknown MPEG layer";
 	else o << "Layer" << v;
 	return o;
 }
@@ -119,7 +119,7 @@ std::ostream & operator<<(std::ostream &o,const mp3::MPEGMode mode) {
 		o<<modeNames.at(static_cast<unsigned>(mode));
 	}
 	catch(...) {
-		o<<"unknown";
+		o<<"unknown mode";
 	}
 	return o;
 }
@@ -135,7 +135,7 @@ std::ostream & operator<<(std::ostream &o,const mp3::MPEGVersion header) {
 		o << "MPEG2.5";
 		break;
 	default:
-		o << "unknown";
+		o << "Unknown MPEG version";
 		break;
 	}
 	return o;

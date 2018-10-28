@@ -112,6 +112,7 @@ union MP3HeaderConverter {
 		bytes=(bytes<<8)+(uint8_t)c;
 	};
 	MP3HeaderConverter(const MP3Header h) : header(h) {};
+	MP3HeaderConverter(const uint32_t b) : bytes(b) {};
 };
 
 class MP3 {

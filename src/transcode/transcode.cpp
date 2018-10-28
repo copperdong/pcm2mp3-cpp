@@ -8,42 +8,54 @@
 #include "transcode.hpp"
 #include <regex>
 #include <sstream>
+#include "../ArgParseStandalone.h"
 
-#define MODE WAV
 
 int main(int argc,char *argv[]) {
+	ArgParse::ArgParser parser("PCM transcoding to MP3");
+	std::string infile = "";
+	std::string outfile = "";
+	unsigned rate=8;
+	unsigned quality=5;
+
+	parser.AddArgument("-i/--infile","Input file name",&infile,ArgParse::Argument::Required);
+	parser.AddArgument("-o/--outfile","Output file name",&outfile,ArgParse::Argument::Optional);
+	parser.AddArgument("-b/--bitrate","Required bit rate (defaults to 8)",&rate,ArgParse::Argument::Optional);
+	parser.AddArgument("-q/--quality","Quality of conversion (defaults to 5)",&rate,ArgParse::Argument::Optional);
+
+	if(parser.ParseArgs(argc,argv)<0) {
+			std::cerr << "Cannot parse arguments correctly" << std::endl;
+			return -1;
+		}
+	if(parser.HelpPrinted()) return 0;
+
+	std::string prefix;
 	try {
-		std::string infile(argv[1]);
-		std::regex r("^([^.]+)\\.(.+)$");
+		std::regex r("^([^.]+)");
 		std::smatch matcher;
 		std::regex_match(infile,matcher,r);
-		auto prefix=matcher[1];
-		auto suffix=matcher[2];
+		std::stringstream s;
+		s << matcher[1];
+		prefix=s.str();
+	}
+	catch(...) {
+		prefix=infile;
+	}
+	if(outfile.size()==0) {
 		std::stringstream s;
 		s << prefix << ".mp3";
-		auto outfile=s.str();
+		outfile=s.str();
+	}
+	std::cout << "Transcoding " << infile << " to " << outfile
+			<< " with bitrate of " << rate << "kbps and quality " << quality << std::endl;
 
-		unsigned rate=8;
-		if(argc>2) {
-			std::string r(argv[2]);
-			rate=std::stoul(r);
-		}
-		unsigned quality=5;
-		if(argc>3) {
-			std::string q(argv[3]);
-			quality=std::stoul(q);
-		}
-
-		std::cout << "Loading " << infile << std::endl;
+	try {
  		std::ifstream wav(infile,std::ifstream::binary);
-		std::cout << "Transcoding with output bit-rate " << rate << "kbps, quality " << quality << std::endl;
-		pylame::Transcode transcoder(wav,quality,rate,infile.c_str());
-		std::cout << "Writing to " << outfile << std::endl;
+		pylame::Transcode transcoder(wav,quality,rate,prefix.c_str());
 		std::ofstream out(outfile,std::ofstream::binary);
 		out << transcoder;
 		out.close();
 		std::cout << "Completed" << std::endl;
-//#endif
 	}
 	catch(std::exception &e) {
 		std::cerr << e.what() << std::endl;

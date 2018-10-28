@@ -29,6 +29,22 @@ bool MP3FrameFailureMode::Fails() const  {
 	return id || version || layer || rate || freq || modeExt || emphasis || sequence;
 }
 
+void MP3Frame::build() {
+	mpeg = static_cast<MPEGVersion>(header.version);
+	layer=static_cast<MPEGLayer>(header.layer);
+	mode=static_cast<MPEGMode>(header.mode);
+	spec=MPEGSpecification(mpeg,layer,mode);
+	mp3=MP3(mpeg,layer);
+
+
+	bitRate=mp3.rate(header.rate);
+	sampleRate=mp3.frequency(header.frequency);
+	crc=header.crc!=0;
+}
+
+MP3Frame::MP3Frame(const MP3Header &h) : header(h) {
+	build();
+}
 
 offset_t MP3Frame::match(const MP3ValidFrame &v)  {
 
@@ -49,8 +65,8 @@ offset_t MP3Frame::match(const MP3ValidFrame &v)  {
 	if(it==end) throw std::runtime_error("No frame header found");
 
 	header=block.header;
-
-
+	build();
+	/*
 	mpeg = static_cast<MPEGVersion>(header.version);
 	layer=static_cast<MPEGLayer>(header.layer);
 	mode=static_cast<MPEGMode>(header.mode);
@@ -61,7 +77,7 @@ offset_t MP3Frame::match(const MP3ValidFrame &v)  {
 	bitRate=mp3.rate(block.header.rate);
 	sampleRate=mp3.frequency(block.header.frequency);
 	crc=block.header.crc!=0;
-
+	*/
 
 	//zero=std::all_of(it,end,[](char x) { return x == 0; });
 
@@ -82,15 +98,15 @@ size_t MP3Frame::size() const {
 
 
 std::ostream & operator<<(std::ostream &o,const mp3::MP3Frame &f) {
-	auto c=(f.hasCRC()) ? "Yes" : "No ";
-	auto z=(f.allZero()) ? "Yes" : "No ";
-	o << std::setw(8) << std::hex  << f.address()
-			<< std::dec << " (" << std::setw(8) << f.address() << ") "
-			<< f.Header() << " : " << std::setw(8) <<  " Samples " << f.SampleRate()
-			<< " Bits " << f.BitRate() << " " << "Has CRC: " << c << " "
-			<< f.Version() << " " << f.Layer() << " " << f.Mode()
-			<< " Length " << f.size()
-			<< " All zero " << z;
+	auto c=(f.hasCRC()) ? "Yes" : " No";
+	if(f.fileOffset()>=4) {
+		o << std::setw(8) << std::hex  << f.address()
+			<< std::dec << " (" << std::setw(8) << f.address() << ") ";
+	}
+	o << f.Header() << " ; " << std::setw(8) <<  "Samples: " << f.SampleRate()
+			<< ", Bits: " << f.BitRate() << ", Has CRC: " << c << ", "
+			<< f.Version() << ", " << f.Layer() << ", " << f.Mode()
+			<< ", Length :" << f.size();
 	return o;
 }
 
@@ -101,9 +117,9 @@ std::string _(const bool b) {
 std::ostream & operator<<(std::ostream &o,const mp3::MP3FrameFailureMode &m) {
 	if(!m.Fails()) o << "Frame good";
 	else {
-		o << "id " << _(m.id) << " version " << _(m.version) << " layer " << _(m.layer)
-				<< " bit rate " << _(m.rate) << " sample rate " << _(m.freq)
-				<< " mode " << _(m.modeExt) << " emphasis " << _(m.emphasis);
+		o << "id: " << _(m.id) << ", version: " << _(m.version) << ", layer: " << _(m.layer)
+				<< ", bit rate: " << _(m.rate) << ", sample rate: " << _(m.freq)
+				<< ", mode: " << _(m.modeExt) << ", emphasis: " << _(m.emphasis);
 	}
 	return o;
 }
