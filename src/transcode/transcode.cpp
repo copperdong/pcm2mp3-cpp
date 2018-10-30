@@ -21,7 +21,7 @@ int main(int argc,char *argv[]) {
 	parser.AddArgument("-i/--infile","Input file name",&infile,ArgParse::Argument::Required);
 	parser.AddArgument("-o/--outfile","Output file name",&outfile,ArgParse::Argument::Optional);
 	parser.AddArgument("-b/--bitrate","Required bit rate (defaults to 8)",&rate,ArgParse::Argument::Optional);
-	parser.AddArgument("-q/--quality","Quality of conversion (defaults to 5)",&rate,ArgParse::Argument::Optional);
+	parser.AddArgument("-q/--quality","Quality of conversion (defaults to 5)",&quality,ArgParse::Argument::Optional);
 
 	if(parser.ParseArgs(argc,argv)<0) {
 			std::cerr << "Cannot parse arguments correctly" << std::endl;
@@ -51,7 +51,10 @@ int main(int argc,char *argv[]) {
 
 	try {
  		std::ifstream wav(infile,std::ifstream::binary);
-		pylame::Transcode transcoder(wav,quality,rate,prefix.c_str());
+ 		pylame::mp3::MP3Parameters parameters(quality,rate);
+ 		parameters.set(pylame::id3::ID3Field::Title,"Fred");
+ 		parameters.set(pylame::id3::ID3Field::Copyright,"Lore Lixenberg 2018");
+		pylame::Transcode transcoder(wav,parameters);
 		std::ofstream out(outfile,std::ofstream::binary);
 		out << transcoder;
 		out.close();

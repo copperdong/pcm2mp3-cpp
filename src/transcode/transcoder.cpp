@@ -46,24 +46,16 @@ pcm::PCMFile * select(const data_t &in) {
 }
 
 
-Transcode::Transcode(const data_t &in,const unsigned quality,const unsigned rate,const char *name) : out()  {
+Transcode::Transcode(const data_t &in,const mp3::MP3Parameters & parameters) : out()  {
 	std::shared_ptr<pcm::PCMFile> infile(select(in));
-
-	//std::cout << "Got infile ; setting parameters" << std::endl;
-	MP3File mp3(quality,rate);
-	if(name!=nullptr) mp3[mp3::ID3Tag::Title]=name;
-	//std::cout << "Loading and transcoding file" << std::endl;
+	MP3File mp3(parameters);
 	mp3.transcode(infile);
-	//std::cout << "Transcoded" << std::endl;
 	out.assign(mp3.cbegin(),mp3.cend());
-	//std::cout << "Initialisation complete" << std::endl;
-
 }
 
 
-Transcode::Transcode(const pcm::file_t &pcm,const unsigned quality,const unsigned rate,const char *name) : out() {
-	MP3File mp3(quality,rate);
-	if(name!=nullptr) mp3[mp3::ID3Tag::Title]=name;
+Transcode::Transcode(const pcm::file_t &pcm,const mp3::MP3Parameters & parameters) : out() {
+	MP3File mp3(parameters);
 	mp3.transcode(pcm);
 	out.assign(mp3.cbegin(),mp3.cend());
 }
@@ -88,7 +80,7 @@ std::ostream & operator<<(std::ostream &o,const pylame::Transcode &t) {
 	return t.output(o);
 }
 std::istream & operator>>(std::istream &i,pylame::Transcode &t) {
-	t=pylame::Transcode(i,5,48);
+	t=pylame::Transcode(i,pylame::mp3::MP3Parameters());
 	return i;
 }
 

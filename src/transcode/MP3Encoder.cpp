@@ -21,8 +21,8 @@ unsigned MP3Encoder::mp3SizeCalc(unsigned n) {
 MP3Encoder::MP3Encoder(const pcm::file_t &data_,const unsigned quality,const unsigned rate) : MP3Encoder(data_,MP3Parameters(quality,rate)) {};
 MP3Encoder::MP3Encoder(pcm::PCMFile *data_,const MP3Parameters &parameters) : MP3Encoder(std::shared_ptr<pcm::PCMFile>(data_),parameters) {};
 
-MP3Encoder::MP3Encoder(const pcm::file_t &data_,const MP3Parameters &parameters):
-	data(data_), nSamples(data->samplesPerChannel()), mp3Size(MP3Encoder::mp3SizeCalc(nSamples)), output(mp3Size,0) {
+MP3Encoder::MP3Encoder(const pcm::file_t &data_,const MP3Parameters &parameters_):
+	data(data_), parameters(parameters_),nSamples(data->samplesPerChannel()), mp3Size(MP3Encoder::mp3SizeCalc(nSamples)), output() {
 		
 	gf = lame_init();
 	if(gf==nullptr) throw MP3Error("Cannot initialise LAME transcoder");
@@ -33,6 +33,9 @@ MP3Encoder::MP3Encoder(const pcm::file_t &data_,const MP3Parameters &parameters)
 	lame_set_quality(gf,parameters.Quality());
 	
 	parameters.write(gf);
+
+	id3Size=parameters.size();
+	output.resize(id3Size+mp3Size,0);
 	auto response=lame_init_params(gf);
 	if(response<0) throw MP3Error("Cannot initialise LAME transcoder options");
 
@@ -96,7 +99,8 @@ void MP3Encoder::transcode() {
 		auto extra=lame_encode_flush(gf,mp3Out,status);
 
 		mp3Size=status+extra;
-		output.resize(status+extra);
+		output.resize(status+extra+id3Size);
+		for(unsigned i=0;i<id3Size;i++) output[mp3Size+i]=parameters.data()[i];
 	}
 	catch(MP3Error &e) { throw e; }
 	catch(std::exception &e) {

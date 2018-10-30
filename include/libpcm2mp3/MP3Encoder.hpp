@@ -24,8 +24,10 @@ namespace pylame { namespace mp3 {
 class MP3Encoder {
 private:
 	pcm::file_t data;
+	MP3Parameters parameters;
 	unsigned nSamples;
 	unsigned mp3Size;
+	unsigned id3Size;
 	unsigned char *mp3Out;
 	lame_global_flags *gf; 
 	cdata_t output;
@@ -40,7 +42,7 @@ public:
 	virtual ~MP3Encoder();
 	
 	void transcode();
-	unsigned size() { return mp3Size; };
+	unsigned size() { return mp3Size+id3Size; };
 
 	cdata_t::const_iterator cbegin() const { return output.cbegin(); };
 	cdata_t::const_iterator cend() const { return output.cend(); };

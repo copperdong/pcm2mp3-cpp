@@ -1,4 +1,4 @@
-LIBDEPS := -lmp3lame
+LIBDEPS := -lmp3lame -ltag
 LIBNAME := libpcm2mp3
 EXENAME := transcode
 

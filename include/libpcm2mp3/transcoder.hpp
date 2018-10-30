@@ -29,10 +29,10 @@ private:
 
 	
 public:
-	Transcode(const data_t &in,const unsigned quality,const unsigned rate,const char *name = nullptr) ;
-	Transcode(std::istream &in,const unsigned quality,const unsigned rate,const char *name = nullptr) :
-		Transcode(load(in),quality,rate,name) {};
-	Transcode(const pcm::file_t &pcm,const unsigned quality,const unsigned rate,const char *name = nullptr);
+	Transcode(const data_t &in,const mp3::MP3Parameters & parameters) ;
+	Transcode(std::istream &in,const mp3::MP3Parameters & parameters) :
+		Transcode(load(in),parameters) {};
+	Transcode(const pcm::file_t &pcm,const mp3::MP3Parameters & parameters);
 	virtual ~Transcode() { /* std::cerr << "Deleting transcoder" << std::endl; */ };
 	
 	cdata_t::const_iterator cbegin() const { return out.cbegin(); };
