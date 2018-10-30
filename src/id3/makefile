@@ -1,6 +1,6 @@
-LIBDEPS := libtag
+LIBDEPS := -ltag
 LIBNAME := libid3tag
-EXE := id3maker
+EXE := main
 
 LIBDIR := ../../lib/${LIBNAME}
 BINDIR := ../../bin
