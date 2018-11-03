@@ -82,13 +82,6 @@ public:
 	void set(const ID3Field &k,const std::string &v) { fields[id3str[k]]=str_t(v); }
 
 
-	template<typename T,class = typename std::enable_if<std::is_arithmetic<T>::value>::type>
-	void set(const ID3Field &k,const T v) { set(k,std::to_string(v)); }
-
-	template<typename T,class = typename std::enable_if<std::is_arithmetic<T>::value>::type>
-	void set(const std::string &k,const T v) { set(k,std::to_string(v)); }
-
-
 
 
 	void clean() { fields.removeEmpty(); }
@@ -106,7 +99,7 @@ public:
 		tag_t tag;
 		TagLib::StringList unsupported=fields.unsupportedData();
 		tag.setProperties(fields);
-		tag.removeUnsupportedProperties(unsupported);
+		//tag.removeUnsupportedProperties(unsupported);
 
 		TagLib::ByteVector bytes=tag.render();
 		return std::vector<char>(bytes.begin(),bytes.end());

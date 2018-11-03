@@ -18,10 +18,12 @@ unsigned MP3Encoder::mp3SizeCalc(unsigned n) {
 }
 
 
-MP3Encoder::MP3Encoder(const pcm::file_t &data_,const unsigned quality,const unsigned rate) : MP3Encoder(data_,MP3Parameters(quality,rate)) {};
-MP3Encoder::MP3Encoder(pcm::PCMFile *data_,const MP3Parameters &parameters) : MP3Encoder(std::shared_ptr<pcm::PCMFile>(data_),parameters) {};
+MP3Encoder::MP3Encoder(const pcm::file_t &data_,const unsigned quality,const unsigned rate) :
+		MP3Encoder(data_,id3::ID3Header(quality,rate)) {};
+MP3Encoder::MP3Encoder(pcm::PCMFile *data_,const id3::ID3Header &parameters) :
+		MP3Encoder(std::shared_ptr<pcm::PCMFile>(data_),parameters) {};
 
-MP3Encoder::MP3Encoder(const pcm::file_t &data_,const MP3Parameters &parameters_):
+MP3Encoder::MP3Encoder(const pcm::file_t &data_,const id3::ID3Header &parameters_):
 	data(data_), parameters(parameters_),nSamples(data->samplesPerChannel()), mp3Size(MP3Encoder::mp3SizeCalc(nSamples)), output() {
 		
 	gf = lame_init();
@@ -32,7 +34,9 @@ MP3Encoder::MP3Encoder(const pcm::file_t &data_,const MP3Parameters &parameters_
 	lame_set_mode(gf,data->mp3Mode());
 	lame_set_quality(gf,parameters.Quality());
 	
-	parameters.write(gf);
+	lame_set_copyright(gf,parameters.isCopyright());
+	lame_set_original(gf,parameters.isOriginal());
+	parameters.publish();
 
 	id3Size=parameters.size();
 	output.resize(id3Size+mp3Size,0);
@@ -100,7 +104,7 @@ void MP3Encoder::transcode() {
 
 		mp3Size=status+extra;
 		output.resize(status+extra+id3Size);
-		for(unsigned i=0;i<id3Size;i++) output[mp3Size+i]=parameters.data()[i];
+		for(unsigned i=0;i<id3Size;i++) output[mp3Size+i]=parameters[i];
 	}
 	catch(MP3Error &e) { throw e; }
 	catch(std::exception &e) {

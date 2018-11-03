@@ -15,18 +15,17 @@ namespace pylame { namespace id3 {
 
 
 std::map<ID3Field,str_t> Metadata::id3str = {
-		{ ID3Field::Title, "TITLE" },
+		{ ID3Field::Title, "title" },
 		{ ID3Field::Artist, "ARTIST" },
 		{ ID3Field::Album, "ALBUM" },
 		{ ID3Field::Comment, "COMMENT" },
 		{ ID3Field::Genre, "GENRE" },
-		{ ID3Field::Year, "DATE" },
-		{ ID3Field::Date, "DATE" },
+		{ ID3Field::Date, "date" },
 		{ ID3Field::Track, "TRACK" },
 		{ ID3Field::TermsOfUse, "USER" },
 		{ ID3Field::MediaType, "TMED" },
-		{ ID3Field::Copyright, "COPYRIGHT" },
-		{ ID3Field::Duration, "TLEN" },
+		{ ID3Field::Copyright, "copyright" },
+		{ ID3Field::Duration, "TLEN" }
 };
 
 ID3Field Metadata::field(const std::string &name) {

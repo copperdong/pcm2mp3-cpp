@@ -8,6 +8,7 @@
 #include "transcode.hpp"
 #include <regex>
 #include <sstream>
+#include "ID3Header.hpp"
 #include "../ArgParseStandalone.h"
 
 
@@ -51,9 +52,11 @@ int main(int argc,char *argv[]) {
 
 	try {
  		std::ifstream wav(infile,std::ifstream::binary);
- 		pylame::mp3::MP3Parameters parameters(quality,rate);
+ 		pylame::id3::ID3Header parameters;
  		parameters.set(pylame::id3::ID3Field::Title,"Fred");
  		parameters.set(pylame::id3::ID3Field::Copyright,"Lore Lixenberg 2018");
+ 		parameters.setRate(rate);
+ 		parameters.setQuality(quality);
 		pylame::Transcode transcoder(wav,parameters);
 		std::ofstream out(outfile,std::ofstream::binary);
 		out << transcoder;

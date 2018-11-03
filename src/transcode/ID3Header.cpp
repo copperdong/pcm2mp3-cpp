@@ -9,21 +9,25 @@
 
 namespace pylame { namespace id3 {
 
-	ID3Header::ID3Header(const ID3Version v) : version(v), metadata(), data() {
-		//metadata.set(ID3Field::Year,std::to_string(Time::year()));
+	ID3Header::ID3Header(const unsigned q,const unsigned r,const ID3Version v) : version(v), metadata(), quality(q), rate(r), original(false), copyright(false), data() {
 		metadata.set(ID3Field::Date,Time::timestamp());
 		metadata.set(ID3Field::MediaType,std::string("DIG"));
-	};
+	}
+	ID3Header::ID3Header(const ID3Version v) : ID3Header(5,8,v) {};
 	ID3Header::ID3Header(const std::string &title,const std::string &copyright,const ID3Version v) :
 		ID3Header(v) {
 		metadata.set(ID3Field::Title,title);
 		metadata.set(ID3Field::Copyright,copyright);
 	};
-	void ID3Header::set(const ID3Field &f,const std::string &v) { metadata.set(f,v); }
-	void ID3Header::set(const ID3Field &f,const double v) { metadata.set(f,v); }
+
+	void ID3Header::set(const ID3Field &f,const std::string &v) {
+		metadata.set(f,v);
+		if(f==ID3Field::Copyright) copyright=true;
+	}
 	void ID3Header::set(const std::string &k,const std::string &v) { set(Metadata::field(k),v); }
 
-	void ID3Header::set(const std::string &k,const double v) { set(Metadata::field(k),v); }
+
+
 	bool ID3Header::has(const ID3Field&f) const { return metadata.has(f); }
 	void ID3Header::comment(const std::string &s) { set(ID3Field::Comment,s); }
 	void ID3Header::terms(const std::string &s) { set(ID3Field::TermsOfUse,s); };

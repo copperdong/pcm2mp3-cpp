@@ -5,6 +5,8 @@
  *      Author: julianporter
  */
 
+/*
+
 #include "MP3Data.hpp"
 #include <chrono>
 #include <ctime>
@@ -16,7 +18,7 @@ bool MP3Parameters::has(const id3::ID3Field tag) const {
 	return id3.has(tag);
 }
 
-MP3Parameters::MP3Parameters(const id3::ID3Header id3_,const unsigned q,const unsigned r) :
+MP3Parameters::MP3Parameters(const id3::ID3Header &id3_,const unsigned q,const unsigned r) :
 		id3(id3_), original(false), quality(q),rate(r) {
 
 	if(!id3.has(id3::ID3Field::Comment))
@@ -50,3 +52,4 @@ void MP3Parameters::write(lame_global_flags *gf) {
 }}
 
 
+*/

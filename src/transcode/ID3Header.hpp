@@ -23,22 +23,35 @@ class ID3Header {
 private:
 	ID3Version version;
 	Metadata metadata;
+	unsigned quality;
+	unsigned rate;
+	bool original;
+	bool copyright;
 	std::vector<char> data;
 
 public:
 	using iterator = std::vector<char>::iterator;
 	using const_iterator = std::vector<char>::const_iterator;
 
-	ID3Header(const ID3Version v=ID3Version::ID3v1v2);
-	ID3Header(const std::string &title,const std::string &copyright,const ID3Version v=ID3Version::ID3v1v2);
+	ID3Header(const ID3Version v=ID3Version::ID3v2);
+	ID3Header(const std::string &title,const std::string &copyright,const ID3Version v=ID3Version::ID3v2);
+	ID3Header(const unsigned q,const unsigned r,const ID3Version v=ID3Version::ID3v2);
 	ID3Header(const ID3Header &) = default;
 	ID3Header &operator=(const ID3Header &) = default;
 	virtual ~ID3Header() = default;
 
+
 	void set(const ID3Field &f,const std::string &v) ;
-	void set(const ID3Field &f,const double v) ;
 	void set(const std::string &k,const std::string &v);
-	void set(const std::string &k,const double v);
+
+	bool isCopyright() const { return metadata.has(ID3Field::Copyright); };
+	void setOriginal(const bool o) { original=o; };
+	bool isOriginal() const  { return original; };
+
+	void setQuality(const unsigned q) { quality=q; }
+	unsigned Quality() const { return quality; }
+	void setRate(const unsigned r) { rate=r; }
+	unsigned Rate() const { return rate; }
 
 	void comment(const std::string &s) ;
 	void terms(const std::string &s) ;
@@ -50,6 +63,7 @@ public:
 	iterator end() { return data.end(); }
 	const_iterator cbegin() const { return data.begin(); }
 	const_iterator cend() const { return data.end(); }
+	char operator[](unsigned i) const { return data[i]; }
 
 	unsigned size() const { return data.size(); }
 	bool empty() const { return data.empty(); }

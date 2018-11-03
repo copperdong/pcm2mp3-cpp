@@ -46,7 +46,7 @@ pcm::PCMFile * select(const data_t &in) {
 }
 
 
-Transcode::Transcode(const data_t &in,const mp3::MP3Parameters & parameters) : out()  {
+Transcode::Transcode(const data_t &in,const id3::ID3Header & parameters) : out()  {
 	std::shared_ptr<pcm::PCMFile> infile(select(in));
 	MP3File mp3(parameters);
 	mp3.transcode(infile);
@@ -54,7 +54,7 @@ Transcode::Transcode(const data_t &in,const mp3::MP3Parameters & parameters) : o
 }
 
 
-Transcode::Transcode(const pcm::file_t &pcm,const mp3::MP3Parameters & parameters) : out() {
+Transcode::Transcode(const pcm::file_t &pcm,const id3::ID3Header & parameters) : out() {
 	MP3File mp3(parameters);
 	mp3.transcode(pcm);
 	out.assign(mp3.cbegin(),mp3.cend());
@@ -80,7 +80,7 @@ std::ostream & operator<<(std::ostream &o,const pylame::Transcode &t) {
 	return t.output(o);
 }
 std::istream & operator>>(std::istream &i,pylame::Transcode &t) {
-	t=pylame::Transcode(i,pylame::mp3::MP3Parameters());
+	t=pylame::Transcode(i,pylame::id3::ID3Header());
 	return i;
 }
 

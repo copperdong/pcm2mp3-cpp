@@ -8,6 +8,8 @@
 #ifndef LIB_MP3DATA_HPP_
 #define LIB_MP3DATA_HPP_
 
+/*
+
 #include "base.hpp"
 #include <lame/lame.h>
 #include "ID3Header.hpp"
@@ -32,7 +34,7 @@ public:
 	using const_iterator=id3::ID3Header::const_iterator;
 
 	MP3Parameters(const unsigned q=5,const unsigned r=64);
-	MP3Parameters(const id3::ID3Header id3,const unsigned q=5,const unsigned r=64);
+	MP3Parameters(const id3::ID3Header &id3,const unsigned q=5,const unsigned r=8);
 	MP3Parameters(const MP3Parameters &) = default;
 	MP3Parameters & operator=(const MP3Parameters &) = default;
 	virtual ~MP3Parameters() = default;
@@ -64,7 +66,7 @@ public:
 }}
 
 
-
+*/
 
 
 

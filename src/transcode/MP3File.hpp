@@ -9,20 +9,20 @@
 #define MP3FILE_HPP_
 
 #include "base.hpp"
-#include "MP3Data.hpp"
+#include "ID3Header.hpp"
 #include "PCMFile.hpp"
 
 namespace pylame {
 
 class MP3File {
 private:
-	mp3::MP3Parameters parameters;
+	id3::ID3Header parameters;
 	cdata_t out;
 	double duration;
 
 public:
 	MP3File(const unsigned quality,const unsigned rate) : parameters(quality,rate), out(), duration(0.0) {};
-	MP3File(const mp3::MP3Parameters &p) : parameters(p), out(), duration(0.0) {};
+	MP3File(const id3::ID3Header &p) : parameters(p), out(), duration(0.0) {};
 	virtual ~MP3File() = default;
 
 	void transcode(pcm::PCMFile *pcm);

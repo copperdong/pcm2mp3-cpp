@@ -9,7 +9,7 @@
 #define MP3ENCODER_HPP_
 
 #include "PCMFile.hpp"
-#include "MP3Data.hpp"
+#include "ID3Header.hpp"
 #include <lame/lame.h>
 #include "base.hpp"
 
@@ -24,7 +24,7 @@ namespace pylame { namespace mp3 {
 class MP3Encoder {
 private:
 	pcm::file_t data;
-	MP3Parameters parameters;
+	id3::ID3Header parameters;
 	unsigned nSamples;
 	unsigned mp3Size;
 	unsigned id3Size;
@@ -35,10 +35,10 @@ private:
 	static unsigned mp3SizeCalc(unsigned);
 
 public:
-	MP3Encoder() : data(nullptr), nSamples(0), mp3Size(0), mp3Out(nullptr), gf(nullptr), output() {};
+	MP3Encoder() : data(nullptr), parameters(id3::ID3Version::ID3v2), nSamples(0), mp3Size(0), id3Size(0), mp3Out(nullptr), gf(nullptr), output() {};
 	MP3Encoder(const pcm::file_t &data_,const unsigned quality,const unsigned rate);
-	MP3Encoder(const pcm::file_t &data_,const MP3Parameters &parameters);
-	MP3Encoder(pcm::PCMFile *data_,const MP3Parameters &parameters);
+	MP3Encoder(const pcm::file_t &data_,const id3::ID3Header &parameters);
+	MP3Encoder(pcm::PCMFile *data_,const id3::ID3Header &parameters);
 	virtual ~MP3Encoder();
 	
 	void transcode();
