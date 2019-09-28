@@ -48,6 +48,8 @@ public:
 	iterator end() const { return frames.cend(); }
 	unsigned nframes() const { return frames.size(); }
 
+	void findID3();
+
 
 };
 

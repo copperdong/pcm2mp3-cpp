@@ -24,7 +24,7 @@ data_t load(std::istream &stream) {
 		stream.read(c+pos,1024);
 		pos+=stream.gcount();
 	}
-	return std::move(file);
+	return file;
 }
 
 template <typename T>

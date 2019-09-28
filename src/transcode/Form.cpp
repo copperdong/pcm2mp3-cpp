@@ -31,7 +31,7 @@ bool Form::nextChunk() {
 	try {
 		auto idx=toUpper(it.next<std::string>());
 		auto n=it.next<uint32_t>();
-		auto c=std::make_shared<DataChunk>(idx,std::move(it.getN(n)),endian);
+		auto c=std::make_shared<DataChunk>(idx,it.getN(n),endian);
 		//chunks[idx]=c;
 		chunks.insert(std::make_pair(idx,c));
 		return true;

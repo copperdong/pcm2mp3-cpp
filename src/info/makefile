@@ -1,4 +1,4 @@
-LIBDEPS := 
+LIBDEPS := -ltag
 LIBNAME := libmp3info
 EXE := mp3info
 

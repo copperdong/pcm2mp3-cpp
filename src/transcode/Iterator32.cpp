@@ -54,7 +54,7 @@ namespace pylame { namespace pcm {
 	data_t Iterator32::getN(const unsigned n) {
 		data_t d(it,it+n);
 		it+=n;
-		return std::move(d);
+		return d;
 	}
 		char Iterator32::get() {
 			if(it==end) throw MP3Error("Overrun end of file");

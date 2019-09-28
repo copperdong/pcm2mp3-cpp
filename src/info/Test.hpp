@@ -57,6 +57,8 @@ public:
 	std::shared_ptr<MP3TestResult> operator()() const { return result; }
 	bool isGood() const { return result->isGood(); }
 	std::string message() const { return result->message; }
+
+
 };
 
 } /* namespace mp3 */

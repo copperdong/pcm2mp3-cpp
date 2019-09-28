@@ -5,8 +5,8 @@
  *      Author: julianporter
  */
 
-#ifndef PCM2MP3_CPP_SRC_ID3_METADATA_HPP_
-#define PCM2MP3_CPP_SRC_ID3_METADATA_HPP_
+#ifndef PCM2MP3_CPP_SRC_ID3_ID3METADATA_HPP_
+#define PCM2MP3_CPP_SRC_ID3_ID3METADATA_HPP_
 
 #include <string>
 #include <iostream>
@@ -25,19 +25,20 @@ namespace id3 {
 
 using str_t = TagLib::String;
 
-enum class ID3Field {
-	Title,
-	Artist,
-	Album,
-	Comment,
-	Genre,
-	Year,
-	Date,
-	Track,
-	TermsOfUse,
-	MediaType,
-	Copyright,
-	Duration
+enum class ID3Field : unsigned {
+	Title = 1,
+	Artist = 2,
+	Album = 3,
+	Comment = 4,
+	Genre = 5,
+	Year = 6,
+	Date = 7,
+	Track = 8,
+	TermsOfUse = 9,
+	MediaType = 10,
+	Copyright = 11,
+	Duration =12,
+	Unknown = 255
 };
 
 
@@ -54,10 +55,11 @@ public:
 private:
 
 	map_t fields;
-	static std::map<ID3Field,str_t> id3str;
+
 
 
 public:
+	static std::map<ID3Field,str_t> id3str;
 	static ID3Field field(const std::string &name);
 
 	Metadata() : fields() {};
@@ -80,13 +82,6 @@ public:
 	void set(const ID3Field &k,const std::string &v) { fields[id3str[k]]=str_t(v); }
 
 
-	template<typename T,class = typename std::enable_if<std::is_arithmetic<T>::value>::type>
-	void set(const ID3Field &k,const T v) { set(k,std::to_string(v)); }
-
-	template<typename T,class = typename std::enable_if<std::is_arithmetic<T>::value>::type>
-	void set(const std::string &k,const T v) { set(k,std::to_string(v)); }
-
-
 
 
 	void clean() { fields.removeEmpty(); }
@@ -104,7 +99,7 @@ public:
 		tag_t tag;
 		TagLib::StringList unsupported=fields.unsupportedData();
 		tag.setProperties(fields);
-		tag.removeUnsupportedProperties(unsupported);
+		//tag.removeUnsupportedProperties(unsupported);
 
 		TagLib::ByteVector bytes=tag.render();
 		return std::vector<char>(bytes.begin(),bytes.end());
@@ -118,4 +113,4 @@ public:
 
 
 
-#endif /* PCM2MP3_CPP_SRC_ID3_METADATA_HPP_ */
+#endif /* PCM2MP3_CPP_SRC_ID3_ID3METADATA_HPP_ */

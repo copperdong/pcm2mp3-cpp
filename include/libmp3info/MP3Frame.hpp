@@ -10,6 +10,7 @@
 
 
 #include "MP3.hpp"
+#include "MP3Header.hpp"
 #ifdef COMPUTE_CRC
 #include "CRC16.hpp"
 #endif

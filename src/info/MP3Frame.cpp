@@ -82,13 +82,15 @@ offset_t MP3Frame::match(const MP3ValidFrame &v)  {
 	//zero=std::all_of(it,end,[](char x) { return x == 0; });
 
 	offset=it-data.begin();
-	std::cerr << "Matched " << std::hex << block.bytes << std::dec << " at " << (offset-4) << std::endl;
+	//std::cerr << "Matched " << std::hex << block.bytes << std::dec << " at " << (offset-4) << std::endl;
 	return offset-MP3::FrameHeaderSize+size();
 }
 
 
 size_t MP3Frame::size() const {
-	return (mp3.frameSizeIndex()*bitRate/sampleRate)+header.pad;
+	auto ratio=(1000.0*(double)bitRate)/(double)sampleRate;
+	//std::cout << "Index : " << mp3.frameSizeIndex() << " br : " << bitRate << " sr : " << sampleRate << " ratio : " << ratio << " pad: " << header.pad << std::endl;
+	return size_t(mp3.frameSizeIndex()*ratio)+header.pad;
 }
 
 

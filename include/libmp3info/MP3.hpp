@@ -22,15 +22,7 @@
 
 namespace mp3 {
 
-class MP3CheckError : public std::exception {
-private:
-	std::string message;
-public:
-	MP3CheckError() noexcept = default;
-	MP3CheckError(const std::string &m) noexcept : std::exception(), message(m) {};
 
-	const char * what() const noexcept { return message.c_str(); };
-};
 
 enum class MPEGVersion : unsigned {
 	MPEG25  = 0, // 0xb00,
@@ -60,25 +52,7 @@ enum class MPEGEmphasis : unsigned {
 	CCITJ17=3
 };
 
-struct MP3Header {
-	/*
-	 * AAAAAAAA AAABBCCD EEEEFFGH IIJJKLMM
-	 */
 
-	unsigned emphasis : 2;			// M
-	unsigned original : 1;			// L
-	unsigned copyright : 1;			// K
-	unsigned modeExtension : 2;		// J
-	unsigned mode : 2;				// I
-	unsigned extension : 1;			// H
-	unsigned pad : 1;				// G
-	unsigned frequency : 2;			// F
-	unsigned rate : 4;				// E
-	unsigned crc : 1;				// D
-	unsigned layer : 2;				// C
-	unsigned version : 2;			// B
-	unsigned id : 11;				// A
-};
 
 using mdata_t = std::vector<char>;
 using size_t = unsigned long;
@@ -102,18 +76,7 @@ struct MPEGSpecification {
 };
 
 
-union MP3HeaderConverter {
-	uint32_t bytes;
-	MP3Header header;
-	uint8_t b[4];
 
-	MP3HeaderConverter() : bytes(0) {};
-	void push(const char c) {
-		bytes=(bytes<<8)+(uint8_t)c;
-	};
-	MP3HeaderConverter(const MP3Header h) : header(h) {};
-	MP3HeaderConverter(const uint32_t b) : bytes(b) {};
-};
 
 class MP3 {
 	static std::map<MPEGLayer,unsigned> sizeIndex;
@@ -143,7 +106,6 @@ public:
 std::ostream & operator<<(std::ostream &o,const mp3::MPEGVersion header);
 std::ostream & operator<<(std::ostream &o,const mp3::MPEGLayer header);
 std::ostream & operator<<(std::ostream &o,const mp3::MPEGMode mode);
-std::ostream & operator<<(std::ostream &o,const mp3::MP3Header &header);
 std::ostream & operator<<(std::ostream &o,const mp3::MPEGSpecification &spec);
 
 #endif /* LIB_MP3_HPP_ */

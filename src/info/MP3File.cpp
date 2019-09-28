@@ -6,14 +6,15 @@
  */
 
 #include "MP3File.hpp"
+#include "MP3Header.hpp"
 
 #include <numeric>
 #include <iostream>
 
 
 
-namespace mp3 {
 
+namespace mp3 {
 
 
 std::vector<char> MP3File::readBinaryFile(std::istream &stream) {
@@ -39,9 +40,10 @@ MP3File::MP3File(std::istream &stream) : mp3(readBinaryFile(stream)), frames(), 
 }
 
 
+
 void MP3File::parse() {
 	MP3Header head=initial.Header();
-	std::cerr << (int)head.mode << " " << (int)head.modeExtension << std::endl;
+	//std::cerr << (int)head.mode << " " << (int)head.modeExtension << std::endl;
 	if(head.modeExtension!=0 && head.mode!=static_cast<unsigned>(MPEGMode::JointStereo)) {
 			throw std::runtime_error("Non-zero mode extension when mode is not Joint Stereo");
 	}
@@ -58,7 +60,6 @@ void MP3File::parse() {
 			offset+=MP3::FrameHeaderSize;
 		}
 	}
-
 }
 
 size_t MP3File::size() const {

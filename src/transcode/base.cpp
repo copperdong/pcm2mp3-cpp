@@ -60,10 +60,10 @@ char down(const char c) { return std::tolower(c,l); };
 std::string pylame::toUpper(const std::string &s) {
 	std::vector<char> bytes(s.size(),0);
 	std::transform(s.begin(),s.end(),bytes.begin(), up);
-	return std::move(std::string(bytes.begin(),bytes.end()));
+	return std::string(bytes.begin(),bytes.end());
 }
 std::string pylame::toLower(const std::string &s) {
 	std::vector<char> bytes(s.size(),0);
 	std::transform(s.begin(),s.end(),bytes.begin(), down);
-	return std::move(std::string(bytes.begin(),bytes.end()));
+	return std::string(bytes.begin(),bytes.end());
 }
