@@ -16,6 +16,7 @@ namespace mp3 {
 
 struct TestResult;
 
+
 class MP3File {
 	friend struct MP3TestResult;
 public:
@@ -48,7 +49,6 @@ public:
 	iterator end() const { return frames.cend(); }
 	unsigned nframes() const { return frames.size(); }
 
-	void findID3();
 
 
 };

@@ -17,6 +17,7 @@
 namespace mp3 {
 
 
+
 std::vector<char> MP3File::readBinaryFile(std::istream &stream) {
 	stream.seekg (0, stream.end);
 	auto length = stream.tellg();
@@ -62,6 +63,8 @@ void MP3File::parse() {
 	}
 }
 
+
+
 size_t MP3File::size() const {
 	return std::accumulate(begin(),end(),0,[](size_t s,auto frame) { return s+frame.size(); });
 }
@@ -79,3 +82,4 @@ std::ostream & operator<<(std::ostream &o,const mp3::MP3File &f) {
 	std::for_each(f.begin(),f.end(),[&o](auto frame) { o << frame << std::endl; });
 	return o;
 }
+
